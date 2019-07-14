@@ -1,0 +1,39 @@
+# Use root/example as user/password credentials
+# https://docs.docker.com/samples/library/mongo-express/
+# https://docs.mongodb.com/manual/installation/
+
+version: '3.1'
+
+services:
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    expose:
+      - '27017'
+    # command: '--smallfiles'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+      - MONGO_LOG_DIR=/var/log/mongodb
+    volumes:
+      - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - '8081:8081'
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    links:
+     - mongodb
+    depends_on:
+      - mongodb
+  
+volumes:
+  mongo_data:
+    driver: local

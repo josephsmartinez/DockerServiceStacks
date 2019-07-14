@@ -1,0 +1,67 @@
+version: '2'
+
+services:
+  ##############
+  # MongoDB uses JSON-like documents with schemata
+  # https://hub.docker.com/_/mongo
+  ##############
+  wikidb:
+    image: mongo:latest
+    restart: always
+    expose:
+      - '27017'
+    command: '--smallfiles --bind_ip ::,0.0.0.0'
+    environment:
+      - MONGO_LOG_DIR=/var/log/mongodb
+      # - MONGO_INITDB_ROOT_USERNAME=root
+      # - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes:
+      - ./data/mongo:/data/db
+  
+  ##############
+  # Mongo Express should only be used privately for development purposes.
+  # https://hub.docker.com/_/mongo-express
+  ##############
+  mongoexpress:
+    image: mongo-express
+    restart: always
+    ports:
+      - '8081:8081'
+    links:
+      - wikidb:mongo
+    depends_on:
+      - wikidb
+    environment: 
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_SERVER=wikidb
+      # - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      # - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+
+  ##############
+  # A modern, lightweight and powerful wiki app built on NodeJS 
+  # https://hub.docker.com/r/requarks/wiki/
+  ##############
+  wikijs:
+    image: 'requarks/wiki'
+    restart: always
+    links:
+      - wikidb:mongo
+    depends_on:
+      - wikidb
+    ports:
+      - '3000:3000'
+    environment:
+      - WIKI_ADMIN_EMAIL=admin@example.com
+      # # Title of this site
+      # - title= Wiki
+      # # Full public path to the site, without the trailing slash
+      # - host= http://piggy.ad.fiu.edu:3000
+      # # Port the main server should listen to (80 by default)
+      # - port= 3000
+    volumes:
+      - ./config.yml:/var/wiki/config.yml
+      - wikijs:/var/wiki
+
+volumes:
+  wikijs:
+    driver: local

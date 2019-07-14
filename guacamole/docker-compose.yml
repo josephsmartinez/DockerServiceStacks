@@ -1,0 +1,11 @@
+docker run --name some-guacd -d guacamole/guacd
+GUACD_LOG_LEVEL=info
+
+docker run --name some-guacamole \
+    --link some-guacd:guacd        \
+    ...
+    -d -p 8080:8080 guacamole/guacamole
+# if using a Docker link is impossible or undesirable:
+GUACD_HOSTNAME= 
+GUACD_PORT= 
+

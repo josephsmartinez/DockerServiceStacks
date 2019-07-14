@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+
+  # Web service
+  snipeit:
+    container_name: snipeit
+    image: snipe/snipe-it
+    #command:
+    environment:
+    # Email Parameters
+    # - the hostname/IP address of your mailserver
+    - MAIL_PORT_587_TCP_ADDR=smtpout.fiu.edu
+    #the port for the mailserver (probably 587, could be another)
+    - MAIL_PORT_587_TCP_PORT=587
+    # the default from address, and from name for emails
+    - MAIL_ENV_FROM_ADDR=castic@fiu.edu
+    - MAIL_ENV_FROM_NAME=castic
+    # - pick 'tls' for SMTP-over-SSL, 'tcp' for unencrypted
+    - MAIL_ENV_ENCRYPTION=tcp
+    # SMTP username and password
+    - MAIL_ENV_USERNAME=castic
+    - MAIL_ENV_PASSWORD=ENTER_PASSWORD
+    # Snipe-IT Settings
+    - APP_ENV=production
+    - APP_DEBUG=false
+    - APP_KEY=<ENTER_KEY>  
+    - APP_URL=http://piggy.ad.fiu.edu:81
+    - APP_TIMEZONE=US/Pacific
+    - APP_LOCALE=en
+    - MYSQL_ROOT_PASSWORD=password
+    - MYSQL_DATABASE=snipeit
+    - MYSQL_USER=snipeit
+    - MYSQL_PASSWORD=password
+    - MYSQL_PORT_3306_TCP_ADDR=mysql
+    volumes:
+    - snipe-vol:/var/lib/snipeit
+    # Add local mount point
+    #- /home/castic/www/caseidb:/var/www/html
+    links:
+    - snipe-mysql:mysql
+    depends_on:
+    - snipe-mysql
+    ports:
+    - 81:80
+    restart: always
+
+  # Database service
+  snipe-mysql:
+    container_name: snipe-mysql
+    image: mysql:5.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=snipeit
+      - MYSQL_USER=snipeit
+      - MYSQL_PASSWORD=password
+    volumes:
+    - snipesql-vol:/var/lib/mysql
+    - ./caseidb.sql:/docker-entrypoint-initdb.d/caseidb.sql
+    ports:
+    - 3306:3306
+
+volumes:
+  snipe-vol:
+    driver: local
+  snipesql-vol:
+    driver: local
+

@@ -1,0 +1,58 @@
+version: '2'
+
+networks:
+  ansible:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.61.0/24
+
+services:
+  ssh1:
+      image: castic/castic:centos_ssh
+      ports:
+        - "32751:22"
+      networks:
+        ansible:
+          ipv4_address: 192.168.61.2
+      dns: 8.8.8.8
+      domainname: ansible.castic
+      hostname: centos_one
+      # CHECK IF THIS WORKS
+      privileged: true
+      restart: always
+  ssh2:
+      image: castic/castic:centos_ssh
+      ports:
+        - "32752:22"
+      networks:
+        ansible:
+          ipv4_address: 192.168.61.3
+      dns: 8.8.8.8
+      domainname: ansible.castic
+      hostname: centos_two
+      restart: always
+  ssh3:
+      image: castic/castic:ubuntu_ssh
+      ports:
+        - "32753:22"
+      networks:
+        ansible:
+          ipv4_address: 192.168.61.4
+      dns: 8.8.8.8
+      domainname: ansible.castic
+      hostname: ubuntu_one
+      restart: always
+  ssh4:
+      image: castic/castic:ubuntu_ssh
+      ports:
+        - "32754:22"
+      networks:
+        ansible:
+          ipv4_address: 192.168.61.5
+      dns: 8.8.8.8
+      domainname: ansible.castic
+      hostname: ubuntu_two
+      restart: always
+

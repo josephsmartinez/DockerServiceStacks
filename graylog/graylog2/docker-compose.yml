@@ -36,11 +36,11 @@ services:
       - graylog_journal:/usr/share/graylog/data/journal
     environment:
       # CHANGE ME!
-      - GRAYLOG_PASSWORD_SECRET=5461d6eef5c30b88ab38124487061ea6fe79fdb6522e34339917b3d6cde87f85
+      - GRAYLOG_PASSWORD_SECRET=PASSWORD
       # Password: admin
-      - GRAYLOG_ROOT_PASSWORD_SHA2=5461d6eef5c30b88ab38124487061ea6fe79fdb6522e34339917b3d6cde87f85
+      - GRAYLOG_ROOT_PASSWORD_SHA2=PASSWORD
       # CHANGE ME!
-      - GRAYLOG_WEB_ENDPOINT_URI=http://goofyaustin.ad.fiu.edu:9000/api
+      - GRAYLOG_WEB_ENDPOINT_URI=http://HOSTNAME
     links:
       - mongodb:mongo
       - elasticsearch

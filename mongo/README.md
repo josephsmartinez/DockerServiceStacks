@@ -1,19 +1,28 @@
-# Mongo DB and GUI Frontend
+Mongo Docker Development Container
+===
 
-## Example 1
+About
+---
 
-``` yml
-version: '3'
-services:
-my-mongoDB:
-image: mongo:latest
-volumes:
-- db-data:/data/db
-- mongo-config:/data/configdb
+Creates a simple database of users
 
-volumes:
-db-data:
-mongo-config:
-```
+How to use
+---
 
-https://hub.docker.com/_/mongo
+- Clean deployment
+
+Check .env file for configuration
+> docker-compose config
+Start database
+> docker-compose up -d
+
+- Auto database build
+
+Pending
+
+Resources
+---
+
+Docker Hub - Mongo
+
+Docker Docs - Mongo
